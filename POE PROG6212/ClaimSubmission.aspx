@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <title>Add Claim</title>
+    <title>ClaimSubmission</title>
     <style>
         body {
             background-color: #c0b7d5;
@@ -67,7 +67,7 @@
 <body>
     <form id="form1" runat="server">
         <div class="form-container">
-            <h2>Add Current Claim</h2>
+            <h2>ClaimSubmissionForm</h2>
 
             <label>Lecturer Name:</label>
             <asp:TextBox ID="LecturerName" runat="server"></asp:TextBox><br /><br />

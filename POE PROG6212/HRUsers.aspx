@@ -3,7 +3,7 @@
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head runat="server">
-    <title>Manage Users</title>
+    <title> HRUsers</title>
     <style>
         body {
             background-color: #c0b7d5;
@@ -82,7 +82,7 @@
     <form id="form1" runat="server">
         <div class="container">
             <div class="form-container">
-                <h2>Manage Users</h2>
+                <h2>HRUsers</h2>
                 <div class="form-group">
                     <label for="UserId">User ID (For Update/Delete):</label>
                     <asp:TextBox ID="UserId" runat="server" Enabled="false"></asp:TextBox>
