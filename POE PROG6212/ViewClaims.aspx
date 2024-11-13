@@ -76,6 +76,11 @@
                 <asp:Button ID="RejectButton" runat="server" Text="Reject" OnClick="RejectButton_Click" />
                 <asp:Button ID="SubmitButton" runat="server" Text="Submit" OnClick="SubmitClaims_Click" />
             </div>
+            
+            <h2>Current Claims (Program Coordinator/Manager View)</h2>
+
+            <asp:GridView ID="gvClaims" runat="server" AutoGenerateColumns="true" Visible="false" CssClass="table">
+            </asp:GridView>
         </div>
     </form>
 </body>

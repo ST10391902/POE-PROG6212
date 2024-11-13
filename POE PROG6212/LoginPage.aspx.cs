@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Web.UI;
 
-namespace Programming_p2
+namespace POE_PROG6212
 {
     public partial class Login : Page
     {
@@ -13,9 +13,9 @@ namespace Programming_p2
         protected void btnLogin_Click(object sender, EventArgs e)
         {
             // Get the username, password, and user type
-            string username = txtUser.Text;
-            string password = txtPass.Text;
-            string userType = drpUser.SelectedValue;
+            string username = txtUser.Text; // Access the TextBox value for username
+            string password = txtPass.Text; // Access the TextBox value for password
+            string userType = drpUser.SelectedValue; // Access the selected value from DropDownList
 
             // Here, you should implement your authentication logic
             // This is just a simple example for demonstration purposes
@@ -31,7 +31,7 @@ namespace Programming_p2
                     case "Program Coordinator":
                         Response.Redirect("ViewClaims.aspx"); // Redirect to View Claims page
                         break;
-                    case "Manager":
+                    case "HR":
                         Response.Redirect("ClaimTracking.aspx"); // Redirect to Claim Tracking page
                         break;
                     default:

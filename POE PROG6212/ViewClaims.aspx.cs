@@ -1,5 +1,7 @@
-﻿using System;
+﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
+using System.Reflection;
 using System.Web.UI;
 
 namespace POE_PROG6212
@@ -100,4 +102,21 @@ namespace POE_PROG6212
         public double TotalAmount { get; set; }
         public string Status { get; set; }
     }
+}
+
+
+
+    // Unified Claim class to store claim data
+    public class Claim
+{
+    public string LecturerName { get; set; }
+    public string EmployeeNo { get; set; }
+    public string LecturerNo { get; set; }
+    public string Month { get; set; }
+    public string Year { get; set; }
+    public string HourlyRate { get; set; }
+    public string HoursWorked { get; set; }
+    public string ProgramCode { get; set; }
+    public string Module { get; set; }
+    public string SupportDocument { get; set; }
 }

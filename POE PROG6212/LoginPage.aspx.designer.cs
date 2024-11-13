@@ -7,7 +7,7 @@
 // </auto-generated>
 //------------------------------------------------------------------------------
 
-namespace Programming_p2
+namespace POE_PROG6212
 {
 
 
