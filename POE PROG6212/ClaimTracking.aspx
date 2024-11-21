@@ -6,7 +6,7 @@
     <title>Track Claims</title>
     <style>
          body {
-         background-color: #c0b7d5; /* Updated background color */
+         background-color: #ffb6c1; /* Updated background color */
          font-family: Arial, sans-serif;
      }
      .form-container {
@@ -52,6 +52,12 @@
     </style>
 </head>
 <body>
+        <ul>
+    <li><a href="ClaimSubmission.aspx">Lecture</a></li>
+    <li><a href="ViewClaims.aspx">ProgrammeCoordinator.</a></li>
+    <li><a href="ClaimTracking.aspx"> Manager</a></li>
+    <li><a href="HRUsers.aspx">HR</a></li>
+</ul>
     <form id="form1" runat="server">
         <div class="form-container">
             <h2>Track Claims</h2>

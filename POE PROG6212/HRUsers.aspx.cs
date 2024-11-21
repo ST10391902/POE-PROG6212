@@ -1,107 +1,125 @@
 ﻿using System;
 using System.Data;
-using System.Linq;
+using System.IO;
 using System.Web.UI;
 using System.Web.UI.WebControls;
 
-namespace YourNamespace
+namespace PROGPOE
 {
-    public partial class HRUsers : Page
+    public partial class HR : Page
     {
-        private static DataTable usersTable;
+        private DataTable claimsTable;
 
         protected void Page_Load(object sender, EventArgs e)
         {
             if (!IsPostBack)
             {
-                InitializeDataTable();
+                // Initialize claims data
+                claimsTable = new DataTable();
+                claimsTable.Columns.Add("ClaimNo");
+                claimsTable.Columns.Add("LecturerName");
+                claimsTable.Columns.Add("ProgramCode");
+                claimsTable.Columns.Add("ModuleCode");
+                claimsTable.Columns.Add("Rate", typeof(decimal));
+                claimsTable.Columns.Add("Hours", typeof(int));
+                claimsTable.Columns.Add("ClaimAmount", typeof(decimal));
+                claimsTable.Columns.Add("Document");
+                claimsTable.Columns.Add("Status");
+
+                // Sample data
+                claimsTable.Rows.Add("C001", "Siyanqoba", "PROG6212", "Programming 2A", 110, 10, 1000, "doc1.pdf", "APPROVED");
+                claimsTable.Rows.Add("C002", "Asanda", "HCIN6212", "Human Computer Interaction", 150, 5, 750, "doc2.pdf", "REJECT");
+                claimsTable.Rows.Add("C003", "Landile", "DATA622", "Database (Intermediate)", 120, 8, 960, "doc3.pdf", "APPROVED");
+                claimsTable.Rows.Add("C004", "Wandile", "IPMA6212", "IT Project Management", 150, 12, 1320, "doc4.pdf", "REJECT");
+
+                ViewState["Claims"] = claimsTable;
                 BindGrid();
             }
-        }
-
-        private void InitializeDataTable()
-        {
-            if (usersTable == null)
+            else
             {
-                usersTable = new DataTable();
-                usersTable.Columns.Add("UserId", typeof(int));
-                usersTable.Columns.Add("UserName", typeof(string));
-                usersTable.Columns.Add("UserEmail", typeof(string));
-                usersTable.Columns.Add("UserRole", typeof(string));
+                claimsTable = (DataTable)ViewState["Claims"];
             }
         }
 
         private void BindGrid()
         {
-            UsersGridView.DataSource = usersTable;
-            UsersGridView.DataBind();
+            gvClaims.DataSource = claimsTable;
+            gvClaims.DataBind();
         }
 
-        protected void btnAddUser_Click(object sender, EventArgs e)
+        protected void gvClaims_RowEditing(object sender, GridViewEditEventArgs e)
         {
-            DataRow newRow = usersTable.NewRow();
-            newRow["UserId"] = usersTable.Rows.Count + 1;
-            newRow["UserName"] = UserName.Text;
-            newRow["UserEmail"] = UserEmail.Text;
-            newRow["UserRole"] = UserRole.SelectedValue;
-            usersTable.Rows.Add(newRow);
-
+            gvClaims.EditIndex = e.NewEditIndex;
             BindGrid();
-            ClearFields();
         }
 
-        protected void btnUpdateUser_Click(object sender, EventArgs e)
+        protected void gvClaims_RowUpdating(object sender, GridViewUpdateEventArgs e)
         {
-            if (int.TryParse(UserId.Text, out int userId))
+            // Retrieve updated values
+            GridViewRow row = gvClaims.Rows[e.RowIndex];
+            string claimNo = gvClaims.DataKeys[e.RowIndex].Value.ToString();  // Now it should work
+
+            // Find the corresponding row in the DataTable
+            DataRow[] rows = claimsTable.Select($"ClaimNo = '{claimNo}'");
+
+            if (rows.Length > 0)
             {
-                DataRow row = usersTable.Select($"UserId = {userId}").FirstOrDefault();
-                if (row != null)
-                {
-                    row["UserName"] = UserName.Text;
-                    row["UserEmail"] = UserEmail.Text;
-                    row["UserRole"] = UserRole.SelectedValue;
-                    BindGrid();
-                    ClearFields();
-                }
+                // Update the fields
+                rows[0]["ProgramCode"] = ((TextBox)row.Cells[2].Controls[0]).Text;
+                rows[0]["ModuleCode"] = ((TextBox)row.Cells[3].Controls[0]).Text;
+                rows[0]["Rate"] = Convert.ToDecimal(((TextBox)row.Cells[4].Controls[0]).Text);
+                rows[0]["Hours"] = Convert.ToInt32(((TextBox)row.Cells[5].Controls[0]).Text);
+                rows[0]["ClaimAmount"] = Convert.ToDecimal(rows[0]["Rate"]) * Convert.ToInt32(rows[0]["Hours"]);
+                rows[0]["Status"] = ((TextBox)row.Cells[7].Controls[0]).Text;
+
+                // Rebind the data
+                ViewState["Claims"] = claimsTable;
+                gvClaims.EditIndex = -1;
+                BindGrid();
             }
         }
 
-        protected void btnDeleteUser_Click(object sender, EventArgs e)
+
+        protected void gvClaims_RowCancelingEdit(object sender, GridViewCancelEditEventArgs e)
         {
-            if (int.TryParse(UserId.Text, out int userId))
-            {
-                DataRow row = usersTable.Select($"UserId = {userId}").FirstOrDefault();
-                if (row != null)
-                {
-                    usersTable.Rows.Remove(row);
-                    BindGrid();
-                    ClearFields();
-                }
-            }
-        }
-        
-        protected void btnSubmit_Click(object sender, EventArgs e)
-        {
-            Response.Write("<script>alert('Data Submitted Successfully');</script>");
+            gvClaims.EditIndex = -1;
             BindGrid();
-            ClearFields();
         }
 
-        protected void UsersGridView_SelectedIndexChanged(object sender, EventArgs e)
+        protected void btnExport_Click(object sender, EventArgs e)
         {
-            GridViewRow row = UsersGridView.SelectedRow;
-            UserId.Text = row.Cells[0].Text;
-            UserName.Text = row.Cells[1].Text;
-            UserEmail.Text = row.Cells[2].Text;
-            UserRole.SelectedValue = row.Cells[3].Text;
+            // Generate an invoice as HTML
+            StringWriter sw = new StringWriter();
+            sw.WriteLine("<html><body>");
+            sw.WriteLine("<h2>Lecturer Claims Invoice</h2>");
+            sw.WriteLine("<table border='1'><tr><th>Claim No</th><th>Lecturer Name</th><th>Program Code</th><th>Module Code</th><th>Rate/hr</th><th>Hours</th><th>Claim Amount</th><th>Status</th></tr>");
+
+            foreach (DataRow row in claimsTable.Rows)
+            {
+                sw.WriteLine("<tr>");
+                foreach (var item in row.ItemArray)
+                {
+                    sw.WriteLine($"<td>{item}</td>");
+                }
+                sw.WriteLine("</tr>");
+            }
+
+            sw.WriteLine("</table></body></html>");
+
+            // Export as a file
+            string fileName = "LecturerClaimsInvoice.html";
+            Response.Clear();
+            Response.Buffer = true;
+            Response.AddHeader("content-disposition", $"attachment;filename={fileName}");
+            Response.ContentType = "application/vnd.ms-excel";
+            Response.Output.Write(sw.ToString());
+            Response.Flush();
+            Response.End();
         }
 
-        private void ClearFields()
+        public override void VerifyRenderingInServerForm(Control control)
         {
-            UserId.Text = "";
-            UserName.Text = "";
-            UserEmail.Text = "";
-            UserRole.SelectedIndex = 0;
+            // Required for export to work
         }
     }
 }

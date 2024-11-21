@@ -6,7 +6,7 @@
     <title>View Claims</title>
     <style>
         body {
-            background-color: #c0b7d5;
+            background-color: #ffb6c1;
             font-family: Arial, sans-serif;
         }
 
@@ -55,6 +55,12 @@
     </style>
 </head>
 <body>
+    <ul>
+    <li><a href="ClaimSubmission.aspx">Lecture</a></li>
+    <li><a href="ViewClaims.aspx">ProgrammeCoordinator.</a></li>
+    <li><a href="ClaimTracking.aspx"> Manager</a></li>
+    <li><a href="HRUsers.aspx">HR</a></li>
+</ul>
     <form id="form1" runat="server">
         <div class="container">
             <h2>View Claims</h2>
@@ -75,6 +81,8 @@
                 <asp:Button ID="ApproveButton" runat="server" Text="Approve" OnClick="ApproveButton_Click" />
                 <asp:Button ID="RejectButton" runat="server" Text="Reject" OnClick="RejectButton_Click" />
                 <asp:Button ID="SubmitButton" runat="server" Text="Submit" OnClick="SubmitClaims_Click" />
+                <asp:Button ID="DownloadInvoiceButton" runat="server" Text="Download Invoice" OnClick="DownloadInvoiceButton_Click" />
+
             </div>
             
             <h2>Current Claims (Program Coordinator/Manager View)</h2>
