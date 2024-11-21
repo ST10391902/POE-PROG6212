@@ -40,7 +40,7 @@ namespace PROGPOE
                 claimsTable = (DataTable)ViewState["Claims"];
             }
         }
-
+        
         private void BindGrid()
         {
             gvClaims.DataSource = claimsTable;
